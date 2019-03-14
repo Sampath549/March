@@ -1,0 +1,105 @@
+jQuery.validator.addMethod("lettersonly", function (value, element) {
+    return this.optional(element) || /^[a-z\s]+$/i.test(value);
+}, "Enter Only Alphabets");
+
+jQuery.validator.addMethod("numbersonly", function (value, element) {
+    return this.optional(element) || /^[0-9]+$/i.test(value);
+}, "Enter Only Numbers");
+
+jQuery.validator.addMethod("selectNone", function (value, element) {
+    return this.optional(element) || element.selectedIndex != 0;
+}, "Please select an option.");
+
+jQuery.validator.addMethod("customEmail", function (value, element) {
+    return /^([a-zA-Z0-9_\-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\.)+))([a-zA-Z]{1,5}|[0-9]{1,3})(\]?)$/.test(value);
+}, "Enter a Valid Email");
+
+$(document).ready(function () {
+    $("#CreateUserForm").validate({
+        rules: {
+            'CUFName': {
+                required: true,
+                minlength: 2,
+                lettersonly: true
+            },
+            'CULName': {
+                required: true,
+                lettersonly: true
+            },
+            'CUEMail': {
+                required: true,
+                customEmail: true
+            },
+            'CUMobile': {
+                required: true,
+                numbersonly: true,
+                maxlength: 10
+            },
+            'CURole': {
+                selectNone: true
+            }
+        },
+        messages: {
+            'CUFName': {
+                required: 'Enter First Name.',
+                minlength: 'Must enter Minimum of 2 characters'
+            },
+            'CULName': {
+                required: 'Enter Last Name.'
+            },
+            'CUEMail': {
+                required: 'Enter Email'
+            },
+            'CUMobile': {
+                required: 'Enter Mobile Number.'
+            },
+            'CURole': {
+                selectNone: 'Please Select Role'
+            }
+        },
+        submitHandler: function () {
+            $(".loadingImg").show();
+
+            var _postData = {
+                FName: $('#CUFName').val(),
+                LName: $('#CULName').val(),
+                EMail: $('#CUEMail').val(),
+                Mobile: $('#CUMobile').val(),
+                Role: $('#CURole').val()
+            };
+            console.log(_postData);
+
+            //$.ajax({
+            //    type: "POST",
+            //    url: "/CPanelDev/InsertUpdateCountries",
+            //    data: _postData,
+            //    dataType: "json",
+            //    cache: false,
+            //    headers: { '__RequestVerificationToken': $('input[name=__RequestVerificationToken]').val() },
+            //    success: function (response) {
+            //        var opts = { "closeButton": true, "debug": false, "positionClass": "toast-top-full-width", "onclick": null, "showDuration": null, "hideDuration": null, "timeOut": null, "extendedTimeOut": null, "showEasing": "swing", "hideEasing": "linear", "showMethod": "fadeIn", "hideMethod": "fadeOut" };
+            //        if (!response.Status) {
+            //            toastr.error(response.Message, response.Caption, opts);
+            //            $("#CreateCountriesModel").modal('show');
+            //        }
+            //        else {
+            //            $("#CreateCountriesModel").modal('hide');
+            //            swal({
+            //                title: response.Caption,
+            //                text: response.Message,
+            //                type: "success",
+            //                confirmButtonText: "OK"
+            //            },
+            //            function (isConfirm) {
+            //                if (isConfirm) {
+            //                    window.location.href = "/CPanelDev/CreateCountries";
+            //                }
+            //            });
+            //        }
+
+            //        $(".loadingImg").hide();
+            //    }
+            //});
+        }
+    });
+});

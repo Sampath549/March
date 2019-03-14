@@ -1,0 +1,37 @@
+ [HttpPost, CSRF_AntiForgeryToken]
+        public JsonResult CreateAllUsers(SE_Users _User)
+        {
+            SE_Users Users = new SE_Users();
+            try
+            {
+                //Server-Side Validations
+                if (_User.FirstName == null || Sanitizer.GetSafeHtmlFragment(_User.FirstName) == "" || Regex.IsMatch(Sanitizer.GetSafeHtmlFragment(_User.FirstName), @"^[a-zA-Z\s]+$") == false || Sanitizer.GetSafeHtmlFragment(_User.FirstName).Length > 35 || Sanitizer.GetSafeHtmlFragment(_User.FirstName).Length < 3)
+                    return Json(new Result(false, 500, "Validation Error", "First Name should not be Empty and must contain only Alphabets with Minimum of 3 characters"), JsonRequestBehavior.AllowGet);
+                if (_User.LastName == null || Sanitizer.GetSafeHtmlFragment(_User.LastName) == "" || Regex.IsMatch(Sanitizer.GetSafeHtmlFragment(_User.LastName), @"^[a-zA-Z\s]+$") == false || Sanitizer.GetSafeHtmlFragment(_User.LastName).Length > 35 || Sanitizer.GetSafeHtmlFragment(_User.LastName).Length < 3)
+                    return Json(new Result(false, 500, "Validation Error", "Last Name should not be Empty and must contain only Alphabets with Minimum of 3 characters"), JsonRequestBehavior.AllowGet);
+                if (_User.Email == null || Sanitizer.GetSafeHtmlFragment(_User.Email) == "" || Regex.IsMatch(Sanitizer.GetSafeHtmlFragment(_User.Email), @"^([a-zA-Z0-9_\-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\.)+))([a-zA-Z]{1,5}|[0-9]{1,3})(\]?)+$") == false || Sanitizer.GetSafeHtmlFragment(_User.Email).Length > 75)
+                    return Json(new Result(false, 500, "Validation Error", "Email should not be Empty and must be a Valid format with max of 75 characters"), JsonRequestBehavior.AllowGet);
+                if (_User.Mobile == null || Sanitizer.GetSafeHtmlFragment(_User.Mobile) == "" || Regex.IsMatch(Sanitizer.GetSafeHtmlFragment(_User.Mobile), @"^[0-9]+$") == false || Sanitizer.GetSafeHtmlFragment(_User.Mobile).Length != 10)
+                    return Json(new Result(false, 500, "Validation Error", "Mobile should not be Empty and must contain only Numbers with 10 digits"), JsonRequestBehavior.AllowGet);
+
+                //RSA Encryption
+                Users = new SE_Users();
+                Users.FirstName = RSAPattern.Encrypt(_User.FirstName);
+                Users.LastName = RSAPattern.Encrypt(_User.LastName);
+                Users.Email = RSAPattern.Encrypt(_User.Email);
+                Users.Mobile = RSAPattern.Encrypt(_User.Mobile);
+
+                //API Call
+                ArrayList _Array = new ArrayList();
+                _Array.Add(Users);
+                string response = ApiHelper.PostData_Json_NToken("api/Login/Registration?Users=", _Array);
+                Result _Result = JsonConvert.DeserializeObject<Result>(response);
+
+                return Json(_Result, JsonRequestBehavior.AllowGet);
+            }
+            catch (WebException ex)
+            {
+                string[] _Exception = StatusCode.JsonError(ex).Split('^');
+                return Json(new Result<SE_Users>(Users, false, Convert.ToInt32(_Exception[0]), null, _Exception[1].ToString()), JsonRequestBehavior.AllowGet);
+            }
+        }
