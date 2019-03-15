@@ -1,0 +1,168 @@
+﻿@{
+    Layout = "~/Views/Shared/_MetaTags.cshtml";
+}
+
+<script src="~/Content/App/js/jquery.min.js"></script>
+<script src="~/Content/App/js/bootstrap.min.js"></script>
+<script src="~/Content/js/jquery.validate.min.js"></script>
+<script src="~/Content/js/jquery-validate.bootstrap-tooltip.min.js"></script>
+<link rel="stylesheet" type="text/css" href="~/Content/js/toastr/toastr.css" />
+<link href="~/Content/css/loading.css" rel="stylesheet" />
+
+<style>
+    #menu0 {
+        background-color: rgba(255, 255, 255, 0.05);
+        border-left-color: #38ccff;
+        color: #ffffff;
+    }
+
+    .tooltip {
+        margin-left: 80px;
+    }
+
+    .tooltip-inner {
+        background: white;
+        border-radius: 0px;
+        font-weight: bolder;
+        box-shadow: 1px 1px 1px 1px black;
+    }
+</style>
+
+@Html.AntiForgeryToken()
+
+@if (ViewBag.DisplayModalPopup)
+{
+    <div id="UpdatePwdId" class="modal fade" tabindex="-1" data-keyboard="false" data-backdrop="static">
+        <div class="modal-dialog" style="top:10%;max-width:600px !important">
+            <div class="modal-content">
+                <div class="modal-header modalheader_intro">
+                    <h4 class="modal-title modaltitle_intro">
+                        <span class="modalheader_title textyellow"><i class="fa fa-hand-o-right m-l-3 m-r-4"></i>&nbsp;Change Password</span>
+                    </h4>
+                </div>
+                <p style="color:red;float: right;margin: 0px 0 0 0; font-size:12px; line-height: 15px !important;padding: 0 0 25px 0px;font-family:'Montserrat',sans-serif !important;"> <b>(*) Mandatory:</b> New Password must contain 1 Uppercase, 1 Lowercase, 1 number, 1 special character & should be between 8 to 50 Characters length.</p>
+                <div class="modal-body" style="text-align: left;">
+                    <form role="form" class="form-horizontal" id="FirstTimeLogin" name="FirstTimeLogin" novalidate autocomplete="off" style="text-align:left !important;">
+                        <div class="form-group">
+                            <label class="col-md-4 control-label" style="text-align:left !important;">Old Password :</label>
+                            <div class="col-md-8">
+                                <input type="password" class="form-control" name="UPoldpwd" id="UPoldpwd" maxlength="50" style="height:35px !important;" required autocomplete="off">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-4 control-label" style="text-align:left !important;">New Password :</label>
+                            <div class="col-md-8">
+                                <input type="password" class="form-control" name="UPpwd" id="UPpwd" maxlength="50" style="height:35px !important;" required autocomplete="off">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-4 control-label" style="text-align:left !important;">Confirm Password :</label>
+                            <div class="col-md-8">
+                                <input type="password" class="form-control" name="UPCpwd" id="UPCpwd" maxlength="50" style="height:35px !important;" required autocomplete="off">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-12">
+                                <input type="submit" class="btn btn-primary btnWidth" value="Save" style="float:right;" />
+                                @*<button id="UpdatePwd" class="btn btn-blue btn-icon btn-icon-standalone btn-icon-standalone-right br4" style="float:right;">
+                                        <i class="fa fa-download"></i>
+                                        <span>Update</span>
+                                    </button>*@
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="loadingImg" style="display:none"></div>
+    <script src="~/Content/js/toastr/toastr.min.js"></script>
+    <script src="~/Content/js/Functional/OneTimePassword.js"></script>
+}
+<div class="dashboard_container">
+    <!-- Header -->
+    @Html.Partial("~/Views/PartialViews/CPanelHeader.cshtml")
+    <!-- /Header -->
+
+    <div id="dashboard">
+        <!-- Navigation -->
+        <div id="dashboard-nav" class="dashboard-nav" style="padding:4px 0px !important;">
+            <ul>
+                @Html.Raw(ViewBag.Menus)
+            </ul>
+        </div>
+        <!-- Navigation / End -->
+        <!-- Content -->
+        <div class="dashboard-content">
+            <!-- Title - Breadcrumbs -->
+            <div id="titlebar">
+                <div class="row">
+                    <div class="col-md-12">
+                        <h2>Dashboard</h2>
+                        <!-- Breadcrumbs -->
+                        <nav id="breadcrumbs">
+                            <ul>
+                                <li><a href="#">Home</a></li>
+                                <li>Dashboard</li>
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+            <!-- /Title - Breadcrumbs -->
+            <!-- Recent Activity -->
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="dashboard-list-box with-icons margin-top-20">
+                        <h4>Recent Activities</h4>
+                        <ul>
+                            <li>
+                                <i class="list-box-icon fa fa-list"></i> Your listing <strong><a href="#">The Morning Hotel</a></strong> has been approved!
+                                <a href="#" class="close-list-item"><i class="fa fa-close"></i></a>
+                            </li>
+
+                            <li>
+                                <i class="list-box-icon fa fa-star-o"></i> Kathy Brown left a review on <strong>
+                                    <a href="#">The Morning Hotel</a>
+                                </strong>
+                                <a href="#" class="close-list-item"><i class="fa fa-close"></i></a>
+                            </li>
+
+                            <li>
+                                <i class="list-box-icon fa fa-bookmark-o"></i> Someone bookmarked your <strong><a href="#">Laisa Spa Center</a></strong> listing!
+                                <a href="#" class="close-list-item"><i class="fa fa-close"></i></a>
+                            </li>
+
+                            <li>
+                                <i class="list-box-icon fa fa-star-o"></i> Kathy Brown left a review on <strong>
+                                    <a href="#">Auto Repair Shop</a>
+                                </strong>
+                                <a href="#" class="close-list-item"><i class="fa fa-close"></i></a>
+                            </li>
+
+                            <li>
+                                <i class="list-box-icon fa fa-bookmark-o"></i> Someone bookmarked your <strong><a href="#">The Shelby Apartment</a></strong> listing!
+                                <a href="#" class="close-list-item"><i class="fa fa-close"></i></a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <!-- /Recent Activity -->
+
+            <div class="row">
+                <!-- Copyrights Footer-->
+                @Html.Partial("~/Views/PartialViews/CPanelFooter.cshtml")
+                <!-- /Copyrights Footer-->
+            </div>
+        </div>
+        <!-- Content / End -->
+    </div>
+</div>
+
+<!-- Scripts -->
+<script src="~/Content/App/js/interface.js"></script>
+<!--Carousel-JS-->
+<script src="~/Content/App/js/owl.carousel.min.js"></script>
+<script>'undefined' === typeof _trfq || (window._trfq = []); 'undefined' === typeof _trfd && (window._trfd = []), _trfd.push({ 'tccl.baseHost': 'secureserver.net' }), _trfd.push({ 'ap': 'cpsh' }, { 'server': 'p3plcpnl033' }) // Monitoring performance to make your website faster. If you want to opt-out, please contact web hosting support.</script>
+
